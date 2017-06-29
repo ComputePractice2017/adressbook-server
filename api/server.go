@@ -22,6 +22,7 @@ func Run() {
 	r.HandleFunc("/persons", getAllPersonsHandler).Methods("GET")
 	r.HandleFunc("/persons", newPersonHandler).Methods("POST")
 	r.HandleFunc("/persons/{guid}", editPersonHandler).Methods("PUT")
+	r.HandleFunc("/persons/{guid}", deletePersonHandler).Methods("DELETE")
 
 	log.Println("Running the server on port 8000...")
 	http.ListenAndServe(":8000", r)
