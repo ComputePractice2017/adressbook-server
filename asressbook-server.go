@@ -1,7 +1,7 @@
 package main
 
-import "log"
+import "github.com/ComputePractice2017/adressbook-server/api"
 
 func main() {
-	log.Println("Hello world")
+	api.Run()
 }
