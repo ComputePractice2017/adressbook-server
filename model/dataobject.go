@@ -57,3 +57,11 @@ func NewPerson(p Person) (Person, error) {
 
 	return p, nil
 }
+
+func EditPerson(p Person) error {
+	_, err := r.DB("address").Table("address").Get(p.ID).Replace(p).Run(session)
+	if err != nil {
+		return err
+	}
+	return nil
+}
