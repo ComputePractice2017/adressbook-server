@@ -18,6 +18,66 @@ func InitSesson() error {
 	session, err = r.Connect(r.ConnectOpts{
 		Address: "localhost",
 	})
+	if err != nil {
+		return err
+	}
+
+	err = CreateDBIfNotExist()
+	if err != nil {
+		return err
+	}
+
+	err = CreateTableIfNotExist()
+
+	return err
+}
+
+func CreateDBIfNotExist() error {
+	res, err := r.DBList().Run(session)
+	if err != nil {
+		return err
+	}
+
+	var dbList []string
+	err = res.All(&dbList)
+	if err != nil {
+		return err
+	}
+
+	for _, item := range dbList {
+		if item == "address" {
+			return nil
+		}
+	}
+
+	_, err = r.DBCreate("address").Run(session)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateTableIfNotExist() error {
+	res, err := r.DB("address").TableList().Run(session)
+	if err != nil {
+		return err
+	}
+
+	var tableList []string
+	err = res.All(&tableList)
+	if err != nil {
+		return err
+	}
+
+	for _, item := range tableList {
+		if item == "address" {
+			return nil
+		}
+	}
+
+	_, err = r.DB("address").TableCreate("address", r.TableCreateOpts{PrimaryKey: "ID"}).Run(session)
+
 	return err
 }
 
