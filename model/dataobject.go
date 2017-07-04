@@ -18,7 +18,7 @@ var session *r.Session
 
 func InitSesson() error {
 	dbaddress := os.Getenv("RETHINKDB_HOST")
-	if dbaddress != "" {
+	if dbaddress == "" {
 		dbaddress = "localhost"
 	}
 
