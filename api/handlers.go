@@ -18,6 +18,7 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllPersonsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	persons, err := model.GetPesrons()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -29,12 +30,14 @@ func getAllPersonsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	w.WriteHeader(http.StatusOK)
 }
 
 func newPersonHandler(w http.ResponseWriter, r *http.Request) {
 	var person model.Person
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -72,6 +75,7 @@ func newPersonHandler(w http.ResponseWriter, r *http.Request) {
 
 func editPersonHandler(w http.ResponseWriter, r *http.Request) {
 	var person model.Person
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -109,11 +113,22 @@ func editPersonHandler(w http.ResponseWriter, r *http.Request) {
 
 func deletePersonHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	err := model.DeletePerson(vars["guid"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println(err)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func firstOptionsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Allow", "OPTIONS, GET, POST")
+	w.WriteHeader(http.StatusOK)
+}
+
+func secondOptionsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Allow", "OPTIONS, PUT, DELETE")
 	w.WriteHeader(http.StatusOK)
 }
